@@ -1,5 +1,12 @@
+networks:
+  app-net:
+    driver: bridge
+
 services:
   backend:
+    hostname: backend
+    networks:
+      - app-net
     build:
       context: ./backend
     # Published for local debugging: curl http://localhost:8080/health
@@ -8,19 +15,39 @@ services:
     environment:
       - PORT=8080
 
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://backend:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   proxy:
+    hostname: proxy
+    networks:
+      - app-net
     build:
       context: ./proxy
     # Published for local debugging: curl http://localhost:8081/nginx-health
     ports:
       - "8081:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://proxy:80/nginx-health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   test-runner:
+    networks:
+      - app-net
     build:
       context: ./test-runner
     depends_on:
-      - proxy
+      proxy:
+        condition: service_healthy
+
     environment:
       - PROXY_URL=http://proxy:80

@@ -5,7 +5,9 @@ FROM ubuntu:24.04
 COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN apt-get update && \
-    apt-get install -y nginx curl htop vim git
+	DEBIAN_FRONTEND=noninteractive TZ="Asia/Jerusalem" apt-get install --option "Dpkg::Options::=--force-confdef" \
+	--option "Dpkg::Options::=--force-confold" curl htop nginx git vim -y
+
 
 EXPOSE 80
 
