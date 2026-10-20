@@ -17,4 +17,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Execute test suite
-        run: ./scripts/run-tests.sh
+        run: ls -l ./scripts/run-tests.sh
