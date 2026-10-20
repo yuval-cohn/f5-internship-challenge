@@ -17,4 +17,5 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Execute test suite
-        run: whoami
+        run: ./scripts/run-tests.sh
+
