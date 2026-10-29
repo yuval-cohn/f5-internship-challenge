@@ -18,3 +18,4 @@ jobs:
 
       - name: Execute test suite
         run: ./scripts/run-tests.sh
+

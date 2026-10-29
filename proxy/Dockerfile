@@ -1,12 +1,12 @@
-# Proxy image inherited from the previous team.
-
-FROM ubuntu:24.04
+FROM alpine:latest
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN apt-get update && \
-    apt-get install -y nginx curl htop vim git
+# 1. Update package index and install nginx
+RUN apk update && \
+    apk add --no-cache nginx
 
-EXPOSE 80
+EXPOSE 8081
 
+USER nginx
 CMD ["nginx", "-g", "daemon off;"]
