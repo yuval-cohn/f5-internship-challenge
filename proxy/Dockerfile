@@ -1,14 +1,12 @@
-# Proxy image inherited from the previous team.
-
-FROM ubuntu:24.04
+FROM alpine:latest
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive TZ="Asia/Jerusalem" apt-get install --option "Dpkg::Options::=--force-confdef" \
-	--option "Dpkg::Options::=--force-confold" curl htop nginx git vim -y
+# 1. Update package index and install nginx
+RUN apk update && \
+    apk add --no-cache nginx
 
+EXPOSE 8081
 
-EXPOSE 80
-
+USER nginx
 CMD ["nginx", "-g", "daemon off;"]
